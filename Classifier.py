@@ -14,7 +14,6 @@ class Classifier:
     def __init__(self) -> None:
         self.lda = self.load_model("models\LDA_model")
         self.qda = self.load_model("models\QDA_model")
-        self.rf = self.load_model("models\RF_model")
         self.knn = self.load_model("models\KNN_model")
         self.xgb = self.load_model("models\XGB_model")
 
@@ -26,8 +25,6 @@ class Classifier:
                 return int(self.lda.predict(sample.reshape(1, -1))[0])
         elif model == 'qda':
             return int(self.qda.predict(sample.reshape(1, -1))[0])
-        elif model == 'rf':
-            return int(self.rf.predict(sample.reshape(1, -1))[0])
         elif model == 'knn':
             return int(self.knn.predict(sample.reshape(1, -1))[0])
         elif model == 'xgb':

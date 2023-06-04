@@ -15,22 +15,6 @@ import sys
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    # def set_time_settings(self):
-    #     spinbox_value = self.signal_length.value() if self.signal_length.value() > 0 else 1
-
-    #     if spinbox_value < self.current_time:
-    #         self.eeg_x = self.eeg_x[160*(self.current_time - spinbox_value):]
-    #         self.eeg_y = self.eeg_y[160*(self.current_time - spinbox_value):]
-    #         self.movement_x = self.movement_x[160*(self.current_time - spinbox_value):]
-    #         self.movement_y = self.movement_y[160*(self.current_time - spinbox_value):]
-    #     else:
-    #         self.eeg_x =  [0 for _ in range(160*((spinbox_value - self.current_time)))] + self.eeg_x
-    #         self.eeg_y = [0 for _ in range(160*((spinbox_value - self.current_time)))] + self.eeg_y
-    #         self.movement_x = [0 for _ in range(160*((spinbox_value - self.current_time)))] + self.movement_x
-    #         self.movement_y = [0 for _ in range(160*((spinbox_value - self.current_time )))] + self.movement_y
-
-    #     self.current_time = spinbox_value
-
 
     def set_instructions(self):
         instrukcije_za_test = sio.loadmat("signali\instrukcije_za_test.mat")
@@ -46,7 +30,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        # self.current_time = 5
         self.instruction_vector = self.set_instructions()
         self.iterations_counter = 0
         self.cls = Classifier()
@@ -54,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.eeg_y = [0 for _ in range(800)]
         self.c3 = []
         self.c4 = []
-        self.models = ['lda', 'qda', 'knn', 'xgb', 'rgb']
+        self.models = ['lda', 'qda', 'knn', 'xgb']
         self.labels = 0
         self.movement_x = list(np.linspace(0.0, 5.0, num=800))
         self.movement_y = [0 for _ in range(800)]
@@ -107,13 +90,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.label_accuracy.setText(self.accuracy_msg)
     
 
-        # self.graphWidgetMovement = pg.PlotWidget()
-        # self.graphWidgetMovement.setBackground('#1E1E1E')
-        # self.graphWidgetMovement.setMaximumSize(600, 200)
-        # self.graphWidgetMovement.setMinimumSize(600, 200)
-        # self.graphWidgetMovement.setYRange(0, 2, padding=0)
-        # self.graphWidgetMovement.getAxis('left').setPen('#444444')
-        # self.graphWidgetMovement.getAxis('bottom').setPen('#444444')
 
         self.button = QPushButton('Start')
         self.button.setToolTip("This is a start\stop button")
@@ -160,20 +136,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.model_cb.setCurrentIndex(0)
 
 
-        # self.length_label = QLabel("Singal display time")
-        # self.length_label.setStyleSheet("color: rgb(217, 217, 217)")
-        # self.length_label.resize(100, 40)
-        # self.signal_length = QSpinBox()
-        # self.signal_length.resize(100, 40)
-        # self.signal_length.setStyleSheet("color: rgb(217, 217, 217)")
-        # self.signal_length.setValue(self.current_time)
-        # self.signal_length.valueChanged.connect(self.set_time_settings)
-        # self.signal_length.setMinimumSize(100, 40)
-
 
         self.layout.addWidget(self.button, 0, 1)
         self.layout.addWidget(self.graphWidgetEEG, 0, 0)
-        # self.layout.addWidget(self.graphWidgetMovement, 1, 0)
         self.layout.addWidget(self.combox, 0, 2)
         self.layout.addWidget(self.model_cb, 0, 3)
         self.layout.addWidget(self.rect_left, 0, 4)
@@ -182,8 +147,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout.addWidget(self.label_predicted_values, 2, 0)
         self.layout.addWidget(self.label_accuracy, 3, 0)
 
-        #self.layout.addWidget(self.length_label, 0, 3)
-        #self.layout.addWidget(self.signal_length, 0, 4)
 
         widget = QWidget()
         widget.setLayout(self.layout)
@@ -191,7 +154,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.data_line_eeg =  self.graphWidgetEEG.plot(self.eeg_x, self.eeg_y, pen = self.pen)
-        # self.data_line_movement = self.graphWidgetMovement.plot(self.movement_x, self.movement_y, pen = self.pen)
 
 
     def calculate_accuracy(self):
@@ -239,7 +201,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             self.data_line_eeg.setData(self.eeg_x, self.eeg_y)
-            #self.data_line_movement.setData(self.movement_x, self.movement_y)
             self.c3.append(current_row[2])
             self.c4.append(current_row[3])
 
@@ -271,9 +232,9 @@ class MainWindow(QtWidgets.QMainWindow):
             
             self.iterations_counter += 1
 
-        if self.iterations_counter == len(self.instruction_vector):
-            self.button.click()
-            self.button.setDisabled(True)
+            if self.iterations_counter == len(self.instruction_vector):
+                self.button.click()
+                self.button.setDisabled(True)
         else:
             pass
 
